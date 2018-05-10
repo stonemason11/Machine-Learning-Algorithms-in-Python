@@ -2,12 +2,14 @@
 # coding: utf-8
 import numpy as np
 
-def label_it(D):
+def label_it(D,w):
   """ return the most likely class """
   X,y = D
-  v,c = np.unique(y,return_counts=True)
-  ind = np.argmax(c)
-  return v[ind]
+  cls = np.unique(y)
+  cl_w = [sum(w[y==cl]) for cl in cls]
+  #v,c = np.unique(y,return_counts=True)
+  ind = np.argmax(cl_w)
+  return cls[ind]
 
 def split_data(D,split):
   """split the data set"""
@@ -57,8 +59,8 @@ class stump(object):
             Dl,Dr,idx_l,idx_r = split_data((X,y),sp)
             wl,wr = w[idx_l],w[idx_r]
             #print(sum(wl),sum(wr),sum(w))
-            l_label = label_it(Dl)
-            r_label = label_it(Dr)
+            l_label = label_it(Dl,wl)
+            r_label = label_it(Dr,wr)
             
             #print(l_label)
             #print(Dl[1])
@@ -88,7 +90,6 @@ class stump(object):
         else:
             y_hat=np.where(X[:,int(self.split[0])] >= self.split[1], self.r_label,self.l_label)
         return  y_hat
-
 # Adaboost from scratch
 # Reference: Sergios Theordoridis book
 #from Decision_tree import Decision_Tree

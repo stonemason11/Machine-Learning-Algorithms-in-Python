@@ -1,11 +1,15 @@
 #!/bin/env python
 import numpy as np
-def label_it(D):
+def label_it(D,w):
   """ return the most likely class """
+
   X,y = D
-  v,c = np.unique(y,return_counts=True)
-  ind = np.argmax(c)
-  return v[ind]
+
+  cls = np.unique(y)
+  cl_w = [sum(w[y==cl]) for cl in cls]
+  #v,c = np.unique(y,return_counts=True)
+  ind = np.argmax(cl_w)
+  return cls[ind]
 
 def to_freq(y,w,debug=False):
   """convert to frequencies for each class"""
@@ -78,15 +82,18 @@ class BT_node(object):
   """ a simple binary tree node base class"""
   def __init__(self,Data=None,weight=None,parent=None,metric='entropy',max_depth=1):
     self.Data = Data
-    self.w=weight
+    self.w = weight
     self.parent = parent
     self.metric = metric
     self.max_depth=max_depth
 
   def update(self):
-    self.level = self.parent.level+1 if self.parent is not None  else 0
-    self.label = label_it(self.Data)
     X,y = self.Data
+    if self.w is None:
+        self.w= np.ones(y)/len(y)
+    self.level = self.parent.level+1 if self.parent is not None  else 0
+    self.label = label_it(self.Data,self.w)
+    
     sps = get_threshold_from_mat(X)
     # number of samples are 1 or zero || uniform class || max level reached || some features are identical, but labels are different
     if len(y) <= 1 or self.level>=self.max_depth or len(sps)==0:
