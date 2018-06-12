@@ -2,3 +2,7 @@ __pycache__/
 .ipynb_checkpoints/
 movie_data.csv
 aclImdb/
+model/*
+tflayers-model/*
+*.npz
+MNIST_DATA/*
