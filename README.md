@@ -9,6 +9,7 @@ unless otherwise noted in the scripts. For each algorithm there will be a notebo
 clean python script. 
 
 The algorithms implemented in this repository include:
+
 	1. Adaboost
 	2. Adaptive Projected Subgradient Method (APSM)
 	3. Convolutional Neural Network (CNN)
